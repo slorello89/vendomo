@@ -10,7 +10,7 @@ from sqlalchemy import text
 from .config import settings
 from .db import Base, SessionLocal, engine
 from .redis_client import redis_client
-from .routers import machines, service, stats
+from .routers import catalog, machines, service, stats
 from .seed import seed_if_empty
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -60,6 +60,7 @@ app.add_middleware(
 app.include_router(machines.router)
 app.include_router(service.router)
 app.include_router(stats.router)
+app.include_router(catalog.router)
 
 
 @app.get("/api/health")

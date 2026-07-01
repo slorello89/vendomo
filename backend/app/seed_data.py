@@ -90,6 +90,17 @@ MODELS = ["VendoMax 3000", "VendoMax 5000", "SnackPro X", "ChillVend 2", "FreshS
 MANUFACTURERS = ["Vendomo", "AcmeVend", "Crane", "Royal", "Seaga"]
 STATUSES = ["operational", "operational", "operational", "needs_service", "offline"]
 
+# Canonical product catalog. Note the canonical names ("Cola", not "Coke") — a
+# natural-language query for "coke" has to be normalized to match.
+PRODUCTS = [
+    "Cola", "Diet Cola", "Lemon-Lime Soda", "Root Beer", "Ginger Ale",
+    "Spring Water", "Sparkling Water", "Orange Juice", "Apple Juice",
+    "Energy Drink", "Iced Coffee", "Green Tea", "Lemonade",
+    "Potato Chips", "Pretzels", "Tortilla Chips", "Popcorn",
+    "Chocolate Bar", "Peanut M&Ms", "Granola Bar", "Trail Mix",
+    "Gum", "Mints", "Fruit Snacks", "Cookies", "Protein Bar", "Beef Jerky",
+]
+
 TECHNICIANS = [
     "Alex Rivera", "Sam Chen", "Jordan Patel", "Taylor Kim", "Casey Morgan",
     "Drew Nguyen", "Robin Diaz", "Jamie Flores", "Morgan Lee", "Quinn Ortiz",
@@ -129,6 +140,8 @@ def generate_machines(count: int, rng: random.Random) -> list[dict]:
             status = rng.choice(STATUSES)
 
         venue = rng.choice(VENUE_TYPES)
+        stocked = rng.sample(PRODUCTS, k=rng.randint(8, 14))
+        products = [{"product": p, "quantity": rng.randint(0, 12)} for p in stocked]
         machines.append(
             {
                 "id": uuid.uuid4(),
@@ -145,6 +158,7 @@ def generate_machines(count: int, rng: random.Random) -> list[dict]:
                 "region": state,
                 "country": "USA",
                 "capacity": rng.choice([30, 36, 40, 45, 50]),
+                "products": products,
                 "installed_at": installed_at,
                 "last_serviced_at": last_serviced_at,
             }

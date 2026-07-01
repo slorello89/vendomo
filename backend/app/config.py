@@ -27,6 +27,10 @@ class Settings(BaseSettings):
     revenue_stream: str = "vendomo:revenue:events"
     revenue_stream_maxlen: int = 50000
 
+    # LLM access (for natural-language features)
+    anthropic_api_key: str = ""
+    anthropic_model: str = "claude-haiku-4-5-20251001"
+
     # CORS
     cors_origins: str = "*"
 

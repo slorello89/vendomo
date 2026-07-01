@@ -11,7 +11,7 @@ serviced recently — plus tooling to onboard new machines into the fleet.
 | Frontend   | React + Vite + TypeScript + Leaflet   |
 | API        | FastAPI (Python 3.12)                 |
 | Database   | PostgreSQL 16                         |
-| Cache/bus  | Redis 7 (map cache + revenue stream)  |
+| Cache/bus  | Redis 8 (cache, streams, GEO, query engine) |
 | Worker     | Async revenue-event generator         |
 
 ## Quick start
@@ -84,7 +84,8 @@ Base URL: `http://localhost:8000`
 | GET    | `/api/health`              | Liveness check                           |
 | GET    | `/api/machines`            | Paginated list (`limit/offset/status/region/q`) |
 | GET    | `/api/machines/map`        | Lightweight markers for the map (cached) |
-| GET    | `/api/machines/{id}`       | Machine detail + recent service logs     |
+| GET    | `/api/machines/{id}`       | Machine detail + stocked products + service logs |
+| GET    | `/api/products`            | Canonical product catalog                |
 | POST   | `/api/machines`            | Create a single machine                  |
 | POST   | `/api/machines/bulk`       | Create many machines (JSON array)        |
 | GET    | `/api/service/logs`        | Service log feed (`machine_id/type`)     |
@@ -106,3 +107,22 @@ Inspect it directly:
 docker compose exec redis redis-cli XINFO STREAM vendomo:revenue:events
 docker compose exec redis redis-cli XREVRANGE vendomo:revenue:events + - COUNT 5
 ```
+
+## Machine inventory
+
+Every machine carries the products it stocks, seeded from a canonical catalog
+(`GET /api/products`). Each entry has a product name and quantity (0 = sold
+out), returned on the machine detail endpoint and shown in the detail panel:
+
+```json
+"products": [{ "product": "Cola", "quantity": 7 }, { "product": "Pretzels", "quantity": 0 }]
+```
+
+Redis 8 ships the query engine (FT.*), vector, GEO, JSON and streams in core —
+no extra modules needed.
+
+## LLM configuration
+
+Natural-language features can use Anthropic Claude. Set `ANTHROPIC_API_KEY`
+(and optionally `ANTHROPIC_MODEL`, default `claude-haiku-4-5-20251001`) in your
+`.env`; both are passed through to the backend.

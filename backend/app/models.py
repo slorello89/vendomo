@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text, func
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .db import Base
@@ -29,6 +29,8 @@ class VendingMachine(Base):
     country: Mapped[str] = mapped_column(String(64), default="USA")
 
     capacity: Mapped[int] = mapped_column(Integer, default=40)
+    # What this machine stocks: [{"product": "Cola", "quantity": 7}, ...]
+    products: Mapped[list] = mapped_column(JSONB, default=list)
     installed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     # Nullable on purpose: a freshly installed machine has never been serviced.
     last_serviced_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

@@ -43,7 +43,13 @@ export interface ServiceLog {
   created_at: string;
 }
 
+export interface InventoryItem {
+  product: string;
+  quantity: number;
+}
+
 export interface MachineDetail extends Machine {
+  products: InventoryItem[];
   recent_service_logs: ServiceLog[];
 }
 

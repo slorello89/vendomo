@@ -106,6 +106,29 @@ export default function MachineDetailDrawer({ machineId, onClose }: Props) {
               <span>{formatDate(machine.last_serviced_at)}</span>
             </div>
 
+            <h2 style={{ fontSize: 15, marginTop: 16 }}>Stocked products</h2>
+            {machine.products.length === 0 && (
+              <p className="muted">No inventory on record.</p>
+            )}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {machine.products.map((p) => (
+                <span
+                  key={p.product}
+                  className="badge"
+                  style={{
+                    background: p.quantity > 0 ? "var(--panel-2)" : "transparent",
+                    color: p.quantity > 0 ? "var(--text)" : "var(--muted)",
+                    border: "1px solid var(--border)",
+                    textTransform: "none",
+                  }}
+                  title={p.quantity > 0 ? `${p.quantity} in stock` : "Out of stock"}
+                >
+                  {p.product}
+                  {p.quantity === 0 ? " · out" : ` · ${p.quantity}`}
+                </span>
+              ))}
+            </div>
+
             <h2 style={{ fontSize: 15, marginTop: 16 }}>Record service visit</h2>
             {err && <div className="notice err">{err}</div>}
             <form onSubmit={recordService}>

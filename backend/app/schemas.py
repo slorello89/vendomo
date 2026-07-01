@@ -84,7 +84,13 @@ class ServiceLogOut(BaseModel):
     created_at: datetime
 
 
+class InventoryItem(BaseModel):
+    product: str
+    quantity: int = 0
+
+
 class MachineDetail(MachineOut):
+    products: list[InventoryItem] = []
     recent_service_logs: list[ServiceLogOut] = []
 
 
