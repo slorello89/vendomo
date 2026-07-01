@@ -1,0 +1,79 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: vendomo
+      POSTGRES_PASSWORD: vendomo
+      POSTGRES_DB: vendomo
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vendomo"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://vendomo:vendomo@postgres:5432/vendomo
+      REDIS_URL: redis://redis:6379/0
+      SEED_ON_STARTUP: "true"
+      SEED_COUNT: "${SEED_COUNT:-1000}"
+      CORS_ORIGINS: "*"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build: ./backend
+    command: python -m worker.revenue_worker
+    environment:
+      DATABASE_URL: postgresql+asyncpg://vendomo:vendomo@postgres:5432/vendomo
+      REDIS_URL: redis://redis:6379/0
+      VENDOMO_REVENUE_STREAM: vendomo:revenue:events
+      VENDOMO_REVENUE_EVENTS_PER_SEC: "${REVENUE_EVENTS_PER_SEC:-8}"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    environment:
+      VITE_API_BASE: "/api"
+      VITE_PROXY_TARGET: "http://backend:8000"
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  frontend_node_modules:
