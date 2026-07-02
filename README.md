@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/vendomo-lockup-horizontal-dark.svg" alt="Vendomo" width="320">
+  <img src="assets/vendomo-lockup-horizontal-dark.svg" alt="Vendomo" width="70%">
 </p>
 
 Fleet management for vending machines. Vendomo gives operations teams a single
