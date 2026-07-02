@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="300" height="80">
+  <defs></defs>
+  <rect x="0" y="0" width="300" height="80" rx="8" fill="#091A23"></rect>
+  <g transform="translate(6,8)">
+  <rect x="17" y="7" width="30" height="50" rx="6" fill="none" stroke="#FFFFFF" stroke-width="4"></rect>
+  <circle cx="27" cy="17" r="2.4" fill="#FFFFFF"></circle>
+  <circle cx="37" cy="17" r="2.4" fill="#FFFFFF"></circle>
+  <circle cx="27" cy="27" r="2.4" fill="#FFFFFF"></circle>
+  <circle cx="37" cy="27" r="2.4" fill="#FFFFFF"></circle>
+  <circle cx="27" cy="37" r="2.4" fill="#FFFFFF"></circle>
+  <circle cx="37" cy="37" r="2.4" fill="#FFFFFF"></circle>
+  <rect x="24" y="46" width="16" height="6" rx="3" fill="#2FC883"></rect>
+  </g>
+  <text x="84" y="52" fill="#FFFFFF" font-family="'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="0.5">Vendomo</text>
+</svg>
