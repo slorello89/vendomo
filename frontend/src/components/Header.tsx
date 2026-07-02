@@ -12,7 +12,10 @@ export default function Header() {
 
   return (
     <header className="header">
-      <div className="brand">🥤 Vendomo</div>
+      <div className="brand">
+        <img src="/vendomo-mark-dark.svg" alt="" className="brand-mark" />
+        <span>Vendomo</span>
+      </div>
       <nav className="nav">
         <NavLink to="/" end>
           Map
